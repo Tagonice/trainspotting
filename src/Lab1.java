@@ -1,31 +1,51 @@
 import TSim.*;
 
-import java.util.concurrent.Semaphore;
 
 public class Lab1 {
 
   private TSimInterface tsi;
 
-  private AddingArrayList<Semaphore> semaphores;
-  private AddingArrayList<int[]> sensors;
-
   public Lab1(Integer speed1, Integer speed2) {
     tsi = TSimInterface.getInstance();
 
-    semaphores = new AddingArrayList<>();
-    sensors = new AddingArrayList<>();
+    Thread train1 = new Train(1, speed1);
+    Thread train2 = new Train(2, speed2);
 
-    try {
-      tsi.setSpeed(1,speed1);
-      tsi.setSpeed(2, speed2);
-      tsi.setSwitch(17,7, TSimInterface.SWITCH_RIGHT);
-      tsi.setSwitch(15,9,TSimInterface.SWITCH_RIGHT);
-      //SensorEvent se = new SensorEvent(1,12,3,SensorEvent.ACTIVE );
-      //tsi.setSpeed(1,0);
+    train1.start();
+    train2.start();
+  }
+
+  public class Train extends Thread{
+    int id;
+    int speed;
+
+    public Train(int id, int speed){
+      this.id = id;
+      this.speed = speed;
     }
-    catch (CommandException e) {
-      e.printStackTrace();    // or only e.getMessage() for the error
-      System.exit(1);
+
+    @Override
+    public void run(){
+      try{
+        tsi.setSpeed(id, speed);
+        while(true){
+          SensorEvent se = tsi.getSensor(id);
+
+          if((se.getXpos()==15) && (se.getYpos() == 13)){
+            if(se.getStatus() == SensorEvent.ACTIVE){
+              tsi.setSpeed(se.getTrainId(), 0);
+            }
+          }
+        }
+      }
+      catch (CommandException e){
+        e.printStackTrace();
+        System.exit(1);
+      }
+      catch (InterruptedException e){
+        e.printStackTrace();
+        System.exit(1);
+      }
     }
   }
 }
