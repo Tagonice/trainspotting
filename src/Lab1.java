@@ -27,6 +27,10 @@ public class Lab1 {
     @Override
     public void run(){
       try{
+        tsi.setSwitch(17,7,TSimInterface.SWITCH_RIGHT);
+        tsi.setSwitch(15,9,TSimInterface.SWITCH_RIGHT);
+        tsi.setSwitch(3,11,TSimInterface.SWITCH_RIGHT);
+
         tsi.setSpeed(id, speed);
         while(true){
           SensorEvent se = tsi.getSensor(id);
