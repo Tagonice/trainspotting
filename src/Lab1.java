@@ -86,6 +86,10 @@ public class Lab1 {
               tsi.setSwitch(3, 11, TSimInterface.SWITCH_RIGHT);
             }
 
+            if ((se.getXpos() == 12) && (se.getYpos() == 9) && !downward) {
+              tsi.setSwitch(15, 9, TSimInterface.SWITCH_RIGHT);
+            }
+
             //North station
             if ((se.getXpos() == 15) && ((se.getYpos() == 5) || se.getYpos() == 3)) {
               if (se.getStatus() == SensorEvent.ACTIVE) {
